@@ -44,10 +44,12 @@ jobs:
           is_comment: ${{inputs.is_comment}}
 
       # Test
-      - uses: ./
+      - if: github.event_name == 'pull_request'
+        uses: ./
         id: pr-diff
 
-      - env:
+      - if: github.event_name == 'pull_request'
+        env:
           DIFF_PATH: ${{ steps.pr-diff.outputs.diff_path }}
           SIZE: ${{ steps.pr-diff.outputs.size }}
         run: cat "$DIFF_PATH"
