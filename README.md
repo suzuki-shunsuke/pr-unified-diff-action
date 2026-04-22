@@ -1,8 +1,8 @@
-# pr-diff-action
+# pr-unified-diff-action
 
 [action.yaml](action.yaml)
 
-GitHub Action to get the diff of a pull request.
+GitHub Action to get the unified diff of a pull request.
 
 This is a JavaScript Action port of [suzuki-shunsuke/go-pr-diff](https://github.com/suzuki-shunsuke/go-pr-diff).
 It first tries the GitHub REST API, and falls back to `git` commands if the API fails (e.g. when the diff is too large).

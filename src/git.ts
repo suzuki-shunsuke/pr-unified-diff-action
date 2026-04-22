@@ -21,7 +21,7 @@ export const ensureRepo = async (cwd: string): Promise<EnsuredRepo> => {
   if (await isGitRepo(cwd)) {
     return { dir: cwd, cleanup: () => {} };
   }
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "pr-diff-action-"));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "pr-unified-diff-action-"));
   try {
     await runGit(dir, ["init"]);
   } catch (e) {
