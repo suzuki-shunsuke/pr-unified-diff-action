@@ -45,3 +45,20 @@ jobs:
 
       # Test
       - uses: ./
+        id: pr-diff
+
+      - env:
+          DIFF_PATH: ${{ steps.pr-diff.outputs.diff_path }}
+          SIZE: ${{ steps.pr-diff.outputs.size }}
+        run: cat "$DIFF_PATH"
+
+      - uses: ./
+        id: pr-diff-2
+        with:
+          # https://github.com/suzuki-shunsuke/go-ci-env/pull/35
+          repository: suzuki-shunsuke/go-ci-env
+          pr_number: 35
+      - env:
+          DIFF_PATH: ${{ steps.pr-diff-2.outputs.diff_path }}
+          SIZE: ${{ steps.pr-diff-2.outputs.size }}
+        run: cat "$DIFF_PATH"
