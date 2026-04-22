@@ -55,7 +55,7 @@ export const main = async (): Promise<void> => {
     core.getInput("output_path") ||
     path.join(
       os.tmpdir(),
-      `pr-diff-action-${github.context.runId}-${prNumber}.diff`,
+      `pr-unified-diff-action-${github.context.runId}-${prNumber}.diff`,
     );
   fs.writeFileSync(outputPath, diff);
 
