@@ -1,0 +1,52 @@
+name: PR Diff
+description: Get diff of a pull request via GitHub API with git fallback
+author: Shunsuke Suzuki
+
+branding:
+  icon: git-pull-request
+  color: blue
+
+inputs:
+  pr_number:
+    description: |
+      Pull Request number.
+      If empty, the action falls back to `github.event.pull_request.number`.
+    required: false
+  repository:
+    description: |
+      A target repository in the `owner/repo` format.
+    required: false
+    default: ${{ github.repository }}
+  github_token:
+    description: |
+      GitHub Access Token.
+      `contents:read` and `pull-requests:read` are required.
+      It is also used for authentication when fetching commits in the git fallback path.
+    required: false
+    default: ${{ github.token }}
+  github_api_url:
+    description: |
+      GitHub API base URL. Useful for GitHub Enterprise Server.
+    required: false
+    default: ${{ github.api_url }}
+  output_path:
+    description: |
+      Path to write the diff to.
+      If empty, the action writes the diff to a temporary file under `os.tmpdir()`.
+    required: false
+  working_directory:
+    description: |
+      Working directory for the git fallback.
+      If empty, `process.cwd()` is used.
+      If the directory is a Git repository, the action fetches commits into it; otherwise a temporary directory is created.
+    required: false
+
+outputs:
+  diff_path:
+    description: "Path to the file containing the pull request diff."
+  size:
+    description: "Size of the diff in bytes."
+
+runs:
+  using: "node24"
+  main: "dist/index.js"
