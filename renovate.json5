@@ -3,4 +3,14 @@
     "github>suzuki-shunsuke/renovate-config#4.0.0",
     "github>suzuki-shunsuke/renovate-config:nolimit#4.0.0",
   ],
+  packageRules: [
+    {
+      // @vercel/ncc cannot build with typescript v7. Its bundled ts-loader
+      // fails before compiling anything:
+      //   TypeError: Cannot read properties of undefined (reading 'fileExists')
+      // Remove this once ncc supports v7.
+      matchDepNames: ["typescript"],
+      allowedVersions: "<7",
+    },
+  ],
 }
