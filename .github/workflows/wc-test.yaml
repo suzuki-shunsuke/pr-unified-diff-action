@@ -1,0 +1,48 @@
+---
+name: Test (workflow call)
+on:
+  workflow_call:
+    inputs:
+      sha:
+        description: The commit SHA where the action was built
+        required: true
+        type: string
+permissions: {}
+jobs:
+  test:
+    timeout-minutes: 15
+    runs-on: ubuntu-26.04
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{inputs.sha}}
+          persist-credentials: false
+      # The action built by the release job
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: dist
+          path: dist
+
+      - if: github.event_name == 'pull_request'
+        uses: ./
+        id: pr-diff
+
+      - if: github.event_name == 'pull_request'
+        env:
+          DIFF_PATH: ${{ steps.pr-diff.outputs.diff_path }}
+          SIZE: ${{ steps.pr-diff.outputs.size }}
+        run: cat "$DIFF_PATH"
+
+      - uses: ./
+        id: pr-diff-2
+        with:
+          # https://github.com/suzuki-shunsuke/go-ci-env/pull/35
+          repository: suzuki-shunsuke/go-ci-env
+          pr_number: 35
+      - env:
+          DIFF_PATH: ${{ steps.pr-diff-2.outputs.diff_path }}
+          SIZE: ${{ steps.pr-diff-2.outputs.size }}
+        run: cat "$DIFF_PATH"
